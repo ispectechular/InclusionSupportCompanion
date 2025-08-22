@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Inclusion Support Companion — Jesse Ritter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#111822; --muted:#2a3646; --text:#e6eef6; --accent:#5A94B1; --ring:#5A94B1;
+      --chip:#1a2230; --chip-border:#39485f; --input:#0e1520; --input-border:#2a3646;
+      --focus:#8fc3db;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    body{margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial; background: linear-gradient(180deg,#0a0f14,#0e151f 30%,#0b1018); color:var(--text)}
+    header{position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.2) blur(8px); background: rgba(9,14,22,.75); border-bottom:1px solid var(--muted)}
+    .bar{max-width:1100px; margin:0 auto; padding:14px 16px; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+    .title{font-weight:700}
+    .spacer{flex:1}
+    .field{display:flex; align-items:center; gap:8px}
+    input[type=date]{background:var(--input); border:1px solid var(--input-border); color:var(--text); padding:8px 10px; border-radius:10px}
+
+    main{max-width:1100px; margin:18px auto; padding:0 16px 60px}
+    .tabs{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px}
+    .tab{background:var(--chip); border:2px solid var(--chip-border); padding:12px 20px; border-radius:12px; cursor:pointer; font-size:16px; font-weight:600; color:var(--text); transition:all 0.2s ease}
+    .tab:hover{background:#2a3646; transform:translateY(-2px)}
+    .tab.active{background:var(--accent); color:#08131a; border-color:transparent; box-shadow:0 0 0 3px rgba(90,148,177,0.5)}
+
+    .panel{background:var(--panel); border:1px solid var(--muted); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .panel-head{display:flex; gap:16px; align-items:center; padding:14px 16px; border-bottom:1px solid var(--muted)}
+    .h1{font-size:18px; font-weight:700}
+    .sub{opacity:.8; font-size:13px}
+
+    table{width:100%; border-collapse:collapse; table-layout:fixed}
+    thead{background:#0f1622}
+    th,td{padding:8px 6px; border-bottom:1px solid #1d2939; text-align:center; vertical-align:middle; word-wrap:break-word}
+    th.sticky{position:sticky; left:0; background:#0f1622; z-index:2; text-align:left}
+    td.sticky{position:sticky; left:0; background:#101723; z-index:1; text-align:left}
+
+    .opt{display:flex; align-items:center; justify-content:center; gap:4px}
+    input[type=checkbox]{width:18px; height:18px; accent-color: var(--accent); margin:0}
+    input[type=text]{background:var(--input); border:1px solid var(--input-border); color:var(--text); padding:6px; border-radius:8px; width:100%; box-sizing:border-box}
+
+    .legend{display:flex; gap:8px; flex-wrap:wrap; padding:10px 16px; background:#0f1622; border-top:1px solid var(--muted)}
+    .chip{display:inline-flex; align-items:center; gap:6px; background:var(--chip); border:1px solid var(--chip-border); padding:6px 10px; border-radius:999px; font-size:12px}
+
+    .actions{margin-left:auto; display:flex; gap:8px}
+    .btn{background:var(--chip); border:1px solid var(--chip-border); color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer}
+    .btn:hover{background:#2a3646}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <div class="title">Inclusion Support Logger — <strong>Jesse Ritter</strong></div>
+      <div class="spacer"></div>
+      <div class="field"><label for="date">Date</label><input id="date" type="date" /></div>
+      <div class="actions">
+        <button class="btn" onclick="downloadCSV()">Download CSV</button>
+        <button class="btn" onclick="downloadJSON()">Download JSON</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="tabs" id="tabs"></div>
+    <section class="panel" id="panel"></section>
+    <div class="legend">
+      <div class="chip">1 = Worked Independently</div>
+      <div class="chip">2 = Refused Help</div>
+      <div class="chip">3 = Accepted Help</div>
+      <div class="chip">4 = Asked for Help</div>
+      <div class="chip">5 = Other</div>
+      <div class="chip">6 = Absent</div>
+      <div class="chip">0 = Clear</div>
+    </div>
+  </main>
+  <script>
+  const CLASSES=[{key:'6th-Algebra1-Hoffert',class_period:'6th',class_course:'Algebra 1',class_teacher:'Hoffert',students:['Xander Bowers','Mason Maggert','Julia McFarland','Zoey Schuller','Isaiah Schmerber','Riley Rohrbaugh','Deklyn Sizemore','Trinity Smith','Madison Wilson']},{key:'7th-Geometry-Mikel',class_period:'7th',class_course:'Geometry',class_teacher:'Mikel',students:['Adrian Barrientos','Natasha Cartwright','Austin Cripe','Joseph Dunfee','Lillie Gerke','Guadalupe Jimenez Rodriguez','Logan Rasler','Wyatt Sayler','Ethan Stufflebeam']},{key:'8th-English9A-Wilson',class_period:'8th',class_course:'English 9A',class_teacher:'Wilson',students:['Jacob Hollopeter','Leland Priser','Zoey Schuller','Kathryn Tom']}];
+  const TEACHER='Jesse Ritter';
+  let currentClassKey=CLASSES[0].key;let focusedRowIndex=0;
+
+  const $=s=>document.querySelector(s);
+  const el=(t,a={},c=[])=>{const n=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else n.setAttribute(k,v);}c=[].concat(c);c.forEach(x=>n.append(x.nodeType?x:document.createTextNode(x)));return n};
+  const todayStr=()=>new Date().toISOString().slice(0,10);
+  const storageKey=(d,k)=>`ISL::${d}::${k}`;
+
+  function initDate(){const d=$('#date');d.value=todayStr();d.addEventListener('change',renderPanel);}  
+  function initTabs(){const tabs=$('#tabs');tabs.innerHTML='';CLASSES.forEach(c=>{const t=el('button',{class:'tab'+(c.key===currentClassKey?' active':''),onclick:()=>{currentClassKey=c.key;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));t.classList.add('active');renderPanel();}},`${c.class_period} — ${c.class_course} — ${c.class_teacher}`);tabs.appendChild(t);});}
+
+  function loadData(date,cls){const raw=localStorage.getItem(storageKey(date,cls.key));if(raw)return JSON.parse(raw);return cls.students.map(n=>({student:n,WI:false,RH:false,AH:false,AFH:false,O:false,Ab:false,other_note:''}));}
+  function saveData(date,cls,rows){localStorage.setItem(storageKey(date,cls.key),JSON.stringify(rows));}
+
+  function renderPanel(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);const panel=$('#panel');panel.innerHTML='';const head=el('div',{class:'panel-head'},[el('div',{class:'h1'},`Inclusion Support — ${cls.class_period} Period · ${cls.class_course}`),el('div',{class:'sub'},`Teacher: ${TEACHER} · Class Teacher: ${cls.class_teacher} · Date: ${date}`)]);const tbl=el('table');const thead=el('thead',{},el('tr',{},[el('th',{class:'sticky'},'Student'),el('th',{},'Worked Independently'),el('th',{},'Refused Help'),el('th',{},'Accepted Help'),el('th',{},'Asked for Help'),el('th',{},'Other'),el('th',{},'Other Note'),el('th',{},'Absent')]));tbl.append(thead);const tbody=el('tbody');rows.forEach((r,idx)=>{const tr=el('tr',{tabindex:0});if(idx===focusedRowIndex)tr.classList.add('focused');const tdName=el('td',{class:'sticky'},r.student);const mk=(lab,key)=>el('td',{},el('label',{class:'opt'},[el('input',{type:'checkbox',onchange:e=>{r[key]=e.target.checked;if(r[key]&&key!=='Ab')r.Ab=false;if(key==='Ab'&&r.Ab){r.WI=r.RH=r.AH=r.AFH=r.O=false;r.other_note='';}saveData(date,cls,rows);}}),lab]));const tdNote=el('td',{},el('input',{type:'text',value:r.other_note,placeholder:'Short note',oninput:e=>{r.other_note=e.target.value;if(r.other_note&&!r.O)r.O=true;if(!r.other_note)r.O=false;r.Ab=false;saveData(date,cls,rows);}}));tr.append(tdName,mk('WI','WI'),mk('RH','RH'),mk('AH','AH'),mk('AFH','AFH'),mk('Other','O'),tdNote,mk('Ab','Ab'));tbody.append(tr);});tbl.append(tbody);panel.append(head,tbl);}  
+
+  function downloadCSV(){
+    const date=$('#date').value||todayStr();
+    const cls=CLASSES.find(c=>c.key===currentClassKey);
+    const rows=loadData(date,cls);
+    let csv="date,class_period,class_course,class_teacher,teacher,student,statuses,other_note\n";
+    rows.forEach(r=>{
+      let statuses=[]; if(r.WI)statuses.push('Worked Independently'); if(r.RH)statuses.push('Refused Help'); if(r.AH)statuses.push('Accepted Help'); if(r.AFH)statuses.push('Asked for Help'); if(r.O)statuses.push('Other'); if(r.Ab)statuses.push('Absent');
+      csv+=`${date},${cls.class_period},${cls.class_course},${cls.class_teacher},${TEACHER},${r.student},${statuses.join('|')},${r.other_note}\n`;
+    });
+    const blob=new Blob([csv],{type:'text/csv'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.csv`;a.click();URL.revokeObjectURL(url);
+  }
+  function downloadJSON(){
+    const date=$('#date').value||todayStr();
+    const cls=CLASSES.find(c=>c.key===currentClassKey);
+    const rows=loadData(date,cls);
+    const data={date,teacher:TEACHER,class_period:cls.class_period,class_course:cls.class_course,class_teacher:cls.class_teacher,students:rows};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.json`;a.click();URL.revokeObjectURL(url);
+  }
+
+  initDate();initTabs();renderPanel();
+  </script>
+</body>
+</html>
