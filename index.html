@@ -50,9 +50,10 @@
   </style>
 </head>
 <body>
+  <!-- build: 2025-08-24 — added 7th Geometry students: Deklan Hawthorne, Jessa Sprague, Abigail Zakutanksy -->
   <header>
     <div class="bar">
-      <div class="title">Inclusion Support Logger — <strong>Jesse Ritter</strong></div>
+      <div class="title">Inclusion Support Companion — <strong>Jesse Ritter</strong></div>
       <div class="spacer"></div>
       <div class="field"><label for="date">Date</label><input id="date" type="date" /></div>
       <div class="actions">
@@ -75,22 +76,154 @@
     </div>
   </main>
   <script>
-  const CLASSES=[{key:'6th-Algebra1-Hoffert',class_period:'6th',class_course:'Algebra 1',class_teacher:'Hoffert',students:['Xander Bowers','Mason Maggert','Julia McFarland','Zoey Schuller','Isaiah Schmerber','Riley Rohrbaugh','Deklyn Sizemore','Trinity Smith','Madison Wilson']},{key:'7th-Geometry-Mikel',class_period:'7th',class_course:'Geometry',class_teacher:'Mikel',students:['Adrian Barrientos','Natasha Cartwright','Austin Cripe','Joseph Dunfee','Lillie Gerke','Guadalupe Jimenez Rodriguez','Logan Rasler','Wyatt Sayler','Ethan Stufflebeam']},{key:'8th-English9A-Wilson',class_period:'8th',class_course:'English 9A',class_teacher:'Wilson',students:['Jacob Hollopeter', 'Leland Priser', 'Zoey Schuller', 'Kathryn Tom', 'Isaiah Schmerber']}];
+  const CLASSES=[
+    {
+      key:'6th-Algebra1-Hoffert',
+      class_period:'6th',
+      class_course:'Algebra 1',
+      class_teacher:'Hoffert',
+      students:[
+        'Xander Bowers','Mason Maggert','Julia McFarland','Zoey Schuller',
+        'Isaiah Schmerber','Riley Rohrbaugh','Deklyn Sizemore','Trinity Smith','Madison Wilson'
+      ]
+    },
+    {
+      key:'7th-Geometry-Mikel',
+      class_period:'7th',
+      class_course:'Geometry',
+      class_teacher:'Mikel',
+      students:[
+        'Adrian Barrientos','Natasha Cartwright','Austin Cripe','Joseph Dunfee',
+        'Lillie Gerke','Guadalupe Jimenez Rodriguez','Logan Rasler','Wyatt Sayler','Ethan Stufflebeam',
+        'Deklan Hawthorne','Jessa Sprague','Abigail Zakutanksy'
+      ]
+    },
+    {
+      key:'8th-English9A-Wilson',
+      class_period:'8th',
+      class_course:'English 9A',
+      class_teacher:'Wilson',
+      students:[
+        'Jacob Hollopeter','Leland Priser','Zoey Schuller','Kathryn Tom','Isaiah Schmerber'
+      ]
+    }
+  ];
+
   const TEACHER='Jesse Ritter';
-  let currentClassKey=CLASSES[0].key;let focusedRowIndex=0;
+  let currentClassKey=CLASSES[0].key;
+  let focusedRowIndex=0;
 
   const $=s=>document.querySelector(s);
-  const el=(t,a={},c=[])=>{const n=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else n.setAttribute(k,v);}c=[].concat(c);c.forEach(x=>n.append(x.nodeType?x:document.createTextNode(x)));return n};
+  const el=(t,a={},c=[])=>{
+    const n=document.createElement(t);
+    for(const[k,v]of Object.entries(a)){
+      if(k==='class') n.className=v;
+      else if(k.startsWith('on')) n.addEventListener(k.slice(2),v);
+      else n.setAttribute(k,v);
+    }
+    c=[].concat(c);
+    c.forEach(x=>n.append(x.nodeType?x:document.createTextNode(x)));
+    return n
+  };
   const todayStr=()=>new Date().toISOString().slice(0,10);
   const storageKey=(d,k)=>`ISL::${d}::${k}`;
 
-  function initDate(){const d=$('#date');d.value=todayStr();d.addEventListener('change',renderPanel);}  
-  function initTabs(){const tabs=$('#tabs');tabs.innerHTML='';CLASSES.forEach(c=>{const t=el('button',{class:'tab'+(c.key===currentClassKey?' active':''),onclick:()=>{currentClassKey=c.key;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));t.classList.add('active');renderPanel();}},`${c.class_period} — ${c.class_course} — ${c.class_teacher}`);tabs.appendChild(t);});}
+  function initDate(){
+    const d=$('#date');
+    d.value=todayStr();
+    d.addEventListener('change',renderPanel);
+  }
 
-  function loadData(date,cls){const raw=localStorage.getItem(storageKey(date,cls.key));if(raw)return JSON.parse(raw);return cls.students.map(n=>({student:n,WI:false,RH:false,AH:false,AFH:false,O:false,Ab:false,other_note:''}));}
-  function saveData(date,cls,rows){localStorage.setItem(storageKey(date,cls.key),JSON.stringify(rows));}
+  function initTabs(){
+    const tabs=$('#tabs');
+    tabs.innerHTML='';
+    CLASSES.forEach(c=>{
+      const t=el('button',{
+        class:'tab'+(c.key===currentClassKey?' active':''),
+        onclick:()=>{
+          currentClassKey=c.key;
+          document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+          t.classList.add('active');
+          renderPanel();
+        }
+      },`${c.class_period} — ${c.class_course} — ${c.class_teacher}`);
+      tabs.appendChild(t);
+    });
+  }
 
-  function renderPanel(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);const panel=$('#panel');panel.innerHTML='';const head=el('div',{class:'panel-head'},[el('div',{class:'h1'},`Inclusion Support — ${cls.class_period} Period · ${cls.class_course}`),el('div',{class:'sub'},`Teacher: ${TEACHER} · Class Teacher: ${cls.class_teacher} · Date: ${date}`)]);const tbl=el('table');const thead=el('thead',{},el('tr',{},[el('th',{class:'sticky'},'Student'),el('th',{},'Worked Independently'),el('th',{},'Refused Help'),el('th',{},'Accepted Help'),el('th',{},'Asked for Help'),el('th',{},'Other'),el('th',{},'Other Note'),el('th',{},'Absent')]));tbl.append(thead);const tbody=el('tbody');rows.forEach((r,idx)=>{const tr=el('tr',{tabindex:0});if(idx===focusedRowIndex)tr.classList.add('focused');const tdName=el('td',{class:'sticky'},r.student);const mk=(lab,key)=>el('td',{},el('label',{class:'opt'},[el('input',{type:'checkbox',onchange:e=>{r[key]=e.target.checked;if(r[key]&&key!=='Ab')r.Ab=false;if(key==='Ab'&&r.Ab){r.WI=r.RH=r.AH=r.AFH=r.O=false;r.other_note='';}saveData(date,cls,rows);}}),lab]));const tdNote=el('td',{},el('input',{type:'text',value:r.other_note,placeholder:'Short note',oninput:e=>{r.other_note=e.target.value;if(r.other_note&&!r.O)r.O=true;if(!r.other_note)r.O=false;r.Ab=false;saveData(date,cls,rows);}}));tr.append(tdName,mk('WI','WI'),mk('RH','RH'),mk('AH','AH'),mk('AFH','AFH'),mk('Other','O'),tdNote,mk('Ab','Ab'));tbody.append(tr);});tbl.append(tbody);panel.append(head,tbl);}  
+  function loadData(date,cls){
+    const raw=localStorage.getItem(storageKey(date,cls.key));
+    if(raw) return JSON.parse(raw);
+    return cls.students.map(n=>({
+      student:n,WI:false,RH:false,AH:false,AFH:false,O:false,Ab:false,other_note:''
+    }));
+  }
+  function saveData(date,cls,rows){
+    localStorage.setItem(storageKey(date,cls.key),JSON.stringify(rows));
+  }
+
+  function renderPanel(){
+    const date=$('#date').value||todayStr();
+    const cls=CLASSES.find(c=>c.key===currentClassKey);
+    const rows=loadData(date,cls);
+
+    const panel=$('#panel');
+    panel.innerHTML='';
+
+    const head=el('div',{class:'panel-head'},[
+      el('div',{class:'h1'},`Inclusion Support — ${cls.class_period} Period · ${cls.class_course}`),
+      el('div',{class:'sub'},`Teacher: ${TEACHER} · Class Teacher: ${cls.class_teacher} · Date: ${date}`)
+    ]);
+
+    const tbl=el('table');
+    const thead=el('thead',{},el('tr',{},[
+      el('th',{class:'sticky'},'Student'),
+      el('th',{},'Worked Independently'),
+      el('th',{},'Refused Help'),
+      el('th',{},'Accepted Help'),
+      el('th',{},'Asked for Help'),
+      el('th',{},'Other'),
+      el('th',{},'Other Note'),
+      el('th',{},'Absent')
+    ]));
+    tbl.append(thead);
+
+    const tbody=el('tbody');
+    rows.forEach((r,idx)=>{
+      const tr=el('tr',{tabindex:0});
+      if(idx===focusedRowIndex) tr.classList.add('focused');
+
+      const tdName=el('td',{class:'sticky'},r.student);
+      const mk=(lab,key)=>el('td',{},el('label',{class:'opt'},[
+        el('input',{type:'checkbox',onchange:e=>{
+          r[key]=e.target.checked;
+          if(r[key]&&key!=='Ab') r.Ab=false;
+          if(key==='Ab'&&r.Ab){
+            r.WI=r.RH=r.AH=r.AFH=r.O=false; r.other_note='';
+          }
+          saveData(date,cls,rows);
+        }}),
+        lab
+      ]));
+
+      const tdNote=el('td',{},el('input',{
+        type:'text',value:r.other_note,placeholder:'Short note',
+        oninput:e=>{
+          r.other_note=e.target.value;
+          if(r.other_note&&!r.O) r.O=true;
+          if(!r.other_note) r.O=false;
+          r.Ab=false;
+          saveData(date,cls,rows);
+        }
+      }));
+
+      tr.append(tdName,mk('WI','WI'),mk('RH','RH'),mk('AH','AH'),mk('AFH','AFH'),mk('Other','O'),tdNote,mk('Ab','Ab'));
+      tbody.append(tr);
+    });
+    tbl.append(tbody);
+
+    panel.append(head,tbl);
+  }
 
   function downloadCSV(){
     const date=$('#date').value||todayStr();
@@ -98,18 +231,29 @@
     const rows=loadData(date,cls);
     let csv="date,class_period,class_course,class_teacher,teacher,student,statuses,other_note\n";
     rows.forEach(r=>{
-      let statuses=[]; if(r.WI)statuses.push('Worked Independently'); if(r.RH)statuses.push('Refused Help'); if(r.AH)statuses.push('Accepted Help'); if(r.AFH)statuses.push('Asked for Help'); if(r.O)statuses.push('Other'); if(r.Ab)statuses.push('Absent');
+      let statuses=[];
+      if(r.WI)statuses.push('Worked Independently');
+      if(r.RH)statuses.push('Refused Help');
+      if(r.AH)statuses.push('Accepted Help');
+      if(r.AFH)statuses.push('Asked for Help');
+      if(r.O)statuses.push('Other');
+      if(r.Ab)statuses.push('Absent');
       csv+=`${date},${cls.class_period},${cls.class_course},${cls.class_teacher},${TEACHER},${r.student},${statuses.join('|')},${r.other_note}\n`;
     });
     const blob=new Blob([csv],{type:'text/csv'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.csv`;a.click();URL.revokeObjectURL(url);
   }
+
   function downloadJSON(){
     const date=$('#date').value||todayStr();
     const cls=CLASSES.find(c=>c.key===currentClassKey);
     const rows=loadData(date,cls);
-    const data={date,teacher:TEACHER,class_period:cls.class_period,class_course:cls.class_course,class_teacher:cls.class_teacher,students:rows};
+    const data={
+      date,teacher:TEACHER,
+      class_period:cls.class_period,class_course:cls.class_course,class_teacher:cls.class_teacher,
+      students:rows
+    };
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.json`;a.click();URL.revokeObjectURL(url);
