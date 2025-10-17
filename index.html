@@ -1,109 +1,95 @@
+<!-- Inclusion Support Documentation - Submit Version -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inclusion Support — Mobile‑First</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --blue-700:#4A7A92;
-      --blue-500:#5A94B1;
-      --purple-700:#5B4A6E;
-      --green-600:#879B8D;
-      --bg: radial-gradient(1200px 1200px at 20% -10%, rgba(90,148,177,.15), transparent 40%),
-             radial-gradient(1000px 800px at 120% 10%, rgba(142,134,159,.12), transparent 50%),
-             linear-gradient(180deg, #f8fbfd, #eef4f6 40%, #edf1f3 100%);
-      --glass-bg: rgba(255,255,255,0.75);
-      --glass-blur: blur(10px);
-      --shadow: 0 10px 22px rgba(0,0,0,0.08);
-      --radius: 18px;
-      --chip-bg: rgba(255,255,255,0.7);
-      --chip-border: rgba(90,148,177,0.25);
-      --input-bg: rgba(255,255,255,0.92);
-      --input-bd: rgba(90,148,177,0.35);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:'Lexend',system-ui,-apple-system,Segoe UI,Roboto;background:var(--bg);color:#10151b}
-    header{position:sticky;top:0;z-index:30;backdrop-filter:blur(8px);background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.6));border-bottom:1px solid rgba(74,122,146,.2)}
-    .bar{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .brand{font-weight:700;color:var(--blue-700)}
-    .spacer{flex:1}
-    .field{display:flex;align-items:center;gap:8px}
-    label{color:var(--green-600);font-weight:600}
-    input[type=date]{background:var(--input-bg);border:1px solid var(--input-bd);padding:8px 10px;border-radius:12px;font:inherit}
-    .btn{border:1px solid var(--chip-border);background:var(--chip-bg);padding:8px 12px;border-radius:12px;font-weight:700;cursor:pointer}
-    .btn:hover{background:#fff}
-    main{max-width:1100px;margin:18px auto;padding:0 12px 80px;display:grid;gap:14px}
-    .tabs{display:flex;gap:10px;flex-wrap:wrap}
-    .tab{background:var(--chip-bg);border:1px solid var(--chip-border);padding:10px 14px;border-radius:999px;cursor:pointer;font-weight:700}
-    .tab.active{background:var(--blue-500);color:#07131a;border-color:transparent;box-shadow:0 0 0 3px rgba(90,148,177,0.35)}
-    .panel{background:var(--glass-bg);backdrop-filter:var(--glass-blur);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(74,122,146,.18)}
-    .panel-head{display:flex;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(74,122,146,.18);flex-wrap:wrap}
-    .h1{font-size:1.1rem;font-weight:800;color:var(--blue-700)}
-    .sub{font-size:.95rem;color:var(--green-600);font-weight:600}
-    .survey{display:grid;gap:12px;padding:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .person{display:grid;gap:10px;background:rgba(255,255,255,0.85);border:1px solid rgba(74,122,146,.16);border-radius:16px;padding:12px}
-    .person h3{margin:0;font-size:1rem;color:var(--purple-700)}
-    .options{display:grid;gap:8px}
-    .opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--chip-border);background:var(--chip-bg);border-radius:12px;cursor:pointer;color:#0b0f13;font-weight:600}
-    .opt input{width:18px;height:18px}
-    .opt:hover{background:#fff;color:var(--blue-700)}
-    .note{width:100%;background:#fff;border:1px solid var(--chip-border);border-radius:12px;padding:8px 10px;font:inherit}
-    .legend{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;background:rgba(255,255,255,0.5);border-top:1px solid rgba(74,122,146,.18);border-bottom-left-radius:var(--radius);border-bottom-right-radius:var(--radius)}
-    .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip-bg);border:1px solid var(--chip-border);padding:6px 10px;border-radius:999px;font-size:.85rem}
-    @media (max-width:560px){.survey{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inclusion Support Documentation - Submit</title>
+<style>
+/* --- Injected by ChatGPT: hide legacy download buttons --- */
+#downloadCsvBtn, #downloadJSONBtn, #downloadJsonBtn, button[data-action="download-csv"], button[data-action="download-json"] {
+  display: none !important;
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="bar">
-      <div class="brand">Inclusion Support — <strong>Jesse Ritter</strong></div>
-      <div class="spacer"></div>
-      <div class="field"><label for="date">Date</label><input id="date" type="date" /></div>
-      <button class="btn" onclick="downloadCSV()">Download CSV</button>
-      <button class="btn" onclick="downloadJSON()">Download JSON</button>
+<!-- Header bar with date and submit button -->
+<header>
+  <div class="bar">
+    <div class="brand">Inclusion Support — <strong>Jesse Ritter</strong></div>
+    <div class="spacer"></div>
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" type="date" />
+      <button id="is-submit-btn" class="btn" type="button">Submit</button>
+      <span id="is-submit-status" style="margin-left:10px;font-weight:700;color:#4A7A92;"></span>
     </div>
-  </header>
-  <main>
-    <div id="tabs" class="tabs"></div>
-    <section class="panel">
-      <div class="panel-head">
-        <div class="h1" id="panelTitle"></div>
-        <div class="sub" id="panelSub"></div>
-      </div>
-      <div id="survey" class="survey"></div>
-      <div class="legend">
-        <div class="chip">1 = Worked Independently</div>
-        <div class="chip">2 = Refused Help</div>
-        <div class="chip">3 = Accepted Help</div>
-        <div class="chip">4 = Asked for Help</div>
-        <div class="chip">5 = Other</div>
-        <div class="chip">6 = Absent</div>
-        <div class="chip">0 = Clear</div>
-      </div>
-    </section>
-  </main>
-  <script>
-  const CLASSES=[
-    {key:'6th-Algebra1-Hoffert',class_period:'6th',class_course:'Algebra 1',class_teacher:'Hoffert',students:['Deklyn Sizemore','Isaiah Schmerber','Julia McFarland','Madison Wilson','Mason Maggert','Riley Rohrbaugh','Trinity Smith','Xander Bowers','Zoey Schuller']},
-    {key:'7th-Geometry-Mikel',class_period:'7th',class_course:'Geometry',class_teacher:'Mikel',students:['Abigail Zakutanksy','Adrian Barrientos','Austin Cripe','Deklan Hawthorne','Guadalupe Jimenez Rodriguez','Jessa Sprague','Joseph Dunfee','Lillie Gerke','Logan Rasler','Natasha Cartwright','Ethan Stufflebeam','Wyatt Sayler']}
-  ];
-  const TEACHER='Jesse Ritter';
-  let currentClassKey=CLASSES[0].key;
-  const $=s=>document.querySelector(s);
-  const el=(t,a={},c=[])=>{const n=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(k==='text')n.textContent=v;else n.setAttribute(k,v);}([]).concat(c).forEach(x=>n.append(x?.nodeType?x:document.createTextNode(x)));return n};
-  const todayStr=()=>new Date().toISOString().slice(0,10);
-  const storageKey=(d,k)=>`ISL::${d}::${k}`;
-  function initDate(){const d=$('#date');d.value=todayStr();d.addEventListener('change',renderAll);}  
-  function initTabs(){const tabs=$('#tabs');tabs.innerHTML='';CLASSES.forEach(c=>{const b=el('button',{class:'tab'+(c.key===currentClassKey?' active':''),onclick:()=>{currentClassKey=c.key;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderAll();}},`${c.class_period} — ${c.class_course} — ${c.class_teacher}`);tabs.appendChild(b);});}
-  function loadData(date,cls){const raw=localStorage.getItem(storageKey(date,cls.key));if(raw)return JSON.parse(raw);return cls.students.map(n=>({student:n,WI:false,RH:false,AH:false,AFH:false,O:false,Ab:false,other_note:''}));}
-  function saveData(date,cls,rows){localStorage.setItem(storageKey(date,cls.key),JSON.stringify(rows));}
-  function renderAll(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);$('#panelTitle').textContent=`Inclusion Support · ${cls.class_period} · ${cls.class_course}`;$('#panelSub').textContent=`Teacher: ${TEACHER} · Class Teacher: ${cls.class_teacher} · Date: ${date}`;renderSurvey(rows,cls,date);}
-  function renderSurvey(rows,cls,date){const host=$('#survey');host.innerHTML='';rows.forEach(r=>{const card=el('div',{class:'person'});card.append(el('h3',{text:r.student}));const options=el('div',{class:'options'});const makeOpt=(label,key)=>{const id=`${cls.key}-${r.student}-${key}`.replace(/\s+/g,'_');const input=document.createElement('input');input.type='checkbox';input.id=id;input.checked=r[key]===true;input.addEventListener('change',e=>{r[key]=e.target.checked;if(r[key]&&key!=='Ab')r.Ab=false;if(key==='Ab'&&r.Ab){r.WI=r.RH=r.AH=r.AFH=r.O=false;r.other_note='';}saveData(date,cls,rows);});const lbl=el('label',{class:'opt',for:id},[input,label]);return lbl;};options.append(makeOpt('Worked Independently','WI'),makeOpt('Refused Help','RH'),makeOpt('Accepted Help','AH'),makeOpt('Asked for Help','AFH'),makeOpt('Other','O'),makeOpt('Absent','Ab'));const note=el('input',{class:'note',type:'text',value:r.other_note||'',placeholder:'Other note (optional)'});note.addEventListener('input',e=>{r.other_note=e.target.value;if(r.other_note&&!r.O)r.O=true;if(!r.other_note)r.O=false;r.Ab=false;saveData(date,cls,rows);});card.append(options,note);host.append(card);});}
-  function downloadCSV(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);let csv="date,class_period,class_course,class_teacher,teacher,student,statuses,other_note\n";rows.forEach(r=>{let statuses=[];if(r.WI)statuses.push('Worked Independently');if(r.RH)statuses.push('Refused Help');if(r.AH)statuses.push('Accepted Help');if(r.AFH)statuses.push('Asked for Help');if(r.O)statuses.push('Other');if(r.Ab)statuses.push('Absent');csv+=`${date},${cls.class_period},${cls.class_course},${cls.class_teacher},${TEACHER},${r.student},${statuses.join('|')},${(r.other_note||'').replaceAll(',',';')}\n`;});const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.csv`;a.click();URL.revokeObjectURL(url);}
-  function downloadJSON(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);const data={date,teacher:TEACHER,class_period:cls.class_period,class_course:cls.class_course,class_teacher:cls.class_teacher,students:rows};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.json`;a.click();URL.revokeObjectURL(url);}
-  initDate();initTabs();renderAll();
-  </script>
+  </div>
+</header>
+
+<script>
+(function(){
+  // ====== CONFIG ======
+  const WEBAPP_URL = "https://script.google.com/a/macros/wawasee.k12.in.us/s/AKfycbyg7IQ9H2XVRRP_sXGcBNUXNdPD9hWkqAfY5eNS2wYnMttSZWVL5uaty6auyCMF45PC/exec";
+  const WEBAPP_TOKEN = "CHANGE_ME_TO_MATCH_APPS_SCRIPT"; // must match SHARED_TOKEN in Apps Script
+
+  function safe(fn, fallback) { try { return fn(); } catch(e){ return fallback; } }
+  const todayStr = safe(()=>window.todayStr, ()=>{
+    const d=new Date(), m=String(d.getMonth()+1).padStart(2,'0'), da=String(d.getDate()).padStart(2,'0');
+    return `${d.getFullYear()}-${m}-${da}`;
+  });
+
+  async function submitToDrive(){
+    const btn = document.getElementById('is-submit-btn');
+    const statusEl = document.getElementById('is-submit-status');
+    try {
+      if (btn) btn.disabled = true;
+      if (statusEl) statusEl.textContent = "Submitting…";
+
+      const dateInput = document.getElementById('date') || document.querySelector('input[type="date"]');
+      const date = (dateInput && dateInput.value) ? dateInput.value : todayStr();
+
+      const classes = window.CLASSES || [];
+      const key = window.currentClassKey || (classes[0] ? classes[0].key : "");
+      const cls = classes.find(c => c.key === key) || classes[0] || {};
+      const rows = (typeof window.loadData === "function") ? window.loadData(date, cls) : [];
+
+      const payload = {
+        token: WEBAPP_TOKEN,
+        date,
+        teacher: window.TEACHER || "Jesse Ritter",
+        class_period: cls.class_period || "",
+        class_course: cls.class_course || "",
+        class_teacher: cls.class_teacher || "",
+        class_key: cls.key || "",
+        students: rows || []
+      };
+
+      const res = await fetch(WEBAPP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(()=>({}));
+
+      if (data && data.ok) {
+        if (statusEl) statusEl.textContent = "Saved to Drive";
+      } else {
+        if (statusEl) statusEl.textContent = "Save failed";
+        alert("Save failed: " + (data && data.error ? data.error : "Unknown error"));
+      }
+    } catch (err) {
+      if (statusEl) statusEl.textContent = "Network error";
+      console.error(err);
+      alert('Network error while submitting.');
+    } finally {
+      if (btn) btn.disabled = false;
+      setTimeout(()=>{ if (statusEl) statusEl.textContent=""; }, 3500);
+    }
+  }
+
+  document.getElementById('is-submit-btn').addEventListener('click', submitToDrive);
+})();
+</script>
 </body>
 </html>
