@@ -3,196 +3,265 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inclusion Support — Mobile‑First</title>
+  <title>Inclusion Logger</title>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --blue-700:#4A7A92;
-      --blue-500:#5A94B1;
-      --purple-700:#5B4A6E;
-      --green-600:#879B8D;
-      --bg: radial-gradient(1200px 1200px at 20% -10%, rgba(90,148,177,.15), transparent 40%),
-             radial-gradient(1000px 800px at 120% 10%, rgba(142,134,159,.12), transparent 50%),
-             linear-gradient(180deg, #f8fbfd, #eef4f6 40%, #edf1f3 100%);
-      --glass-bg: rgba(255,255,255,0.75);
-      --glass-blur: blur(10px);
-      --shadow: 0 10px 22px rgba(0,0,0,0.08);
-      --radius: 18px;
-      --chip-bg: rgba(255,255,255,0.7);
-      --chip-border: rgba(90,148,177,0.25);
-      --input-bg: rgba(255,255,255,0.92);
+    :root {
+      --blue-700: #4A7A92;
+      --blue-500: #5A94B1;
+      --green-600: #879B8D;
+      --input-bg: #fff;
       --input-bd: rgba(90,148,177,0.35);
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --toast-success: #1a7f37;
+      --toast-error: #b42318;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:'Lexend',system-ui,-apple-system,Segoe UI,Roboto;background:var(--bg);color:#10151b}
-    header{position:sticky;top:0;z-index:30;backdrop-filter:blur(8px);background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.6));border-bottom:1px solid rgba(74,122,146,.2)}
-    .bar{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .brand{font-weight:700;color:var(--blue-700)}
-    .spacer{flex:1}
-    .field{display:flex;align-items:center;gap:8px}
-    label{color:var(--green-600);font-weight:600}
-    input[type=date]{background:var(--input-bg);border:1px solid var(--input-bd);padding:8px 10px;border-radius:12px;font:inherit}
-    .btn{border:1px solid var(--chip-border);background:var(--chip-bg);padding:8px 12px;border-radius:12px;font-weight:700;cursor:pointer}
-    .btn:hover{background:#fff}
-    main{max-width:1100px;margin:18px auto;padding:0 12px 80px;display:grid;gap:14px}
-    .tabs{display:flex;gap:10px;flex-wrap:wrap}
-    .tab{background:var(--chip-bg);border:1px solid var(--chip-border);padding:10px 14px;border-radius:999px;cursor:pointer;font-weight:700}
-    .tab.active{background:var(--blue-500);color:#07131a;border-color:transparent;box-shadow:0 0 0 3px rgba(90,148,177,0.35)}
-    .panel{background:var(--glass-bg);backdrop-filter:var(--glass-blur);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(74,122,146,.18)}
-    .panel-head{display:flex;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(74,122,146,.18);flex-wrap:wrap}
-    .h1{font-size:1.1rem;font-weight:800;color:var(--blue-700)}
-    .sub{font-size:.95rem;color:var(--green-600);font-weight:600}
-    .survey{display:grid;gap:12px;padding:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .person{display:grid;gap:10px;background:rgba(255,255,255,0.85);border:1px solid rgba(74,122,146,.16);border-radius:16px;padding:12px}
-    .person h3{margin:0;font-size:1rem;color:var(--purple-700)}
-    .options{display:grid;gap:8px}
-    .opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--chip-border);background:var(--chip-bg);border-radius:12px;cursor:pointer;color:#0b0f13;font-weight:600}
-    .opt input{width:18px;height:18px}
-    .opt:hover{background:#fff;color:var(--blue-700)}
-    .note{width:100%;background:#fff;border:1px solid var(--chip-border);border-radius:12px;padding:8px 10px;font:inherit}
-    .legend{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;background:rgba(255,255,255,0.5);border-top:1px solid rgba(74,122,146,.18);border-bottom-left-radius:var(--radius);border-bottom-right-radius:var(--radius)}
-    .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip-bg);border:1px solid var(--chip-border);padding:6px 10px;border-radius:999px;font-size:.85rem}
-    @media (max-width:560px){.survey{grid-template-columns:1fr}}
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Lexend', system-ui, -apple-system, Segoe UI, Roboto; }
+
+    body { background: #fff; color: #10151b; }
+
+    header { background: #fff; box-shadow: 0 2px 10px var(--shadow-light); padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
+    header h1 { font-size: 1.8rem; font-weight: 800; color: var(--blue-700); letter-spacing: 0.5px; }
+
+    .bar { max-width: 1100px; margin: 20px auto; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 0 16px; }
+    .toolbar .left{display:flex;align-items:center;gap:10px;flex:1;min-width:300px}
+    .toolbar .right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    label { color: var(--green-600); font-weight: 600; }
+
+    input[type=date], .btn { background: var(--input-bg); border: 1px solid var(--input-bd); padding: 12px 16px; border-radius: 12px; font: inherit; line-height: 1.2; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+    input[type=date]:focus, .btn:focus { outline: none; border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(90,148,177,0.15); }
+
+    .btn { cursor: pointer; font-weight: 700; background: var(--blue-700); color: #fff; width: fit-content; min-width: 180px; text-align: center; }
+    .btn:hover { background: var(--blue-500); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(74,122,146,0.25); }
+    .btn[disabled] { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+    .tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; justify-content: center; }
+    .tab { appearance: none; border: none; outline: none; cursor: pointer; padding: 12px 24px; border-radius: 999px; font-weight: 700; transition: all .2s ease; background: #f8f9fa; border: 1px solid rgba(90,148,177,.35); color: #152028; box-shadow: 0 2px 4px rgba(0,0,0,.04); }
+    .tab:hover { background: #eef3f5; transform: translateY(-1px); }
+    .tab.active { background: var(--blue-700); color: #fff; border-color: transparent; box-shadow: 0 6px 16px rgba(74,122,146,.25); transform: translateY(-2px); }
+
+    .survey { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .person { display: grid; gap: 10px; background: #fafafa; border: 1px solid rgba(74,122,146,.16); border-radius: 16px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,.03); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .person:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,.06); }
+    .person h3 { margin: 0; font-size: 1rem; color: #333; }
+    .options { display: grid; gap: 8px; }
+    .opt { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid rgba(90,148,177,0.25); background: #fff; border-radius: 12px; cursor: pointer; color: #0b0f13; font-weight: 600; transition: all .15s ease; }
+    .opt input { width: 18px; height: 18px; }
+    .opt:hover { background: #f0f6f8; color: var(--blue-700); }
+    .note { width: 100%; background: #fff; border: 1px solid rgba(90,148,177,0.25); border-radius: 12px; padding: 8px 10px; font: inherit; }
+
+    .toast-container { position: fixed; right: 16px; top: 16px; display: grid; gap: 8px; z-index: 9999; }
+    .toast { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; background: #111; color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.18); opacity: 0; transform: translateY(-6px); transition: opacity .25s ease, transform .25s ease; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--toast-success); }
+    .toast.error { background: var(--toast-error); }
   </style>
 </head>
 <body>
-  <header>
-    <div class="bar">
-      <div class="brand">Inclusion Support — <strong>Jesse Ritter</strong></div>
-      <div class="spacer"></div>
-      <div cl<button class="btn" id="submitCsvBtn">Submit</button>
-<button class="btn" onclick="downloadJSON()">Download JSON</button>
-<span id="submitStatus" style="font-weight:700;margin-left:8px;"></span>
+  <header><h1>Inclusion Logger</h1></header>
+
+  <div class="bar toolbar">
+    <div class="left">
+      <div id="tabs" class="tabs"></div>
     </div>
-  </header>
+    <div class="right">
+      <div class="field">
+        <label for="date">Date</label>
+        <input id="date" type="date" />
+      </div>
+      <button class="btn" id="submitCsvBtn">Submit</button>
+      <span id="submitStatus" style="font-weight:700;margin-left:8px;"></span>
+    </div>
+  </div>
+
   <main>
-    <div id="tabs" class="tabs"></div>
-    <section class="panel">
-      <div class="panel-head">
-        <div class="h1" id="panelTitle"></div>
-        <div class="sub" id="panelSub"></div>
-      </div>
-      <div id="survey" class="survey"></div>
-      <div class="legend">
-        <div class="chip">1 = Worked Independently</div>
-        <div class="chip">2 = Refused Help</div>
-        <div class="chip">3 = Accepted Help</div>
-        <div class="chip">4 = Asked for Help</div>
-        <div class="chip">5 = Other</div>
-        <div class="chip">6 = Absent</div>
-        <div class="chip">0 = Clear</div>
-      </div>
-    </section>
+    <div id="survey" class="survey"></div>
   </main>
+
+  <div class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
   <script>
-  const CLASSES=[
+  // === DATA ===
+  const CLASSES = [
     {key:'6th-Algebra1-Hoffert',class_period:'6th',class_course:'Algebra 1',class_teacher:'Hoffert',students:['Deklyn Sizemore','Isaiah Schmerber','Julia McFarland','Madison Wilson','Mason Maggert','Riley Rohrbaugh','Trinity Smith','Xander Bowers','Zoey Schuller']},
     {key:'7th-Geometry-Mikel',class_period:'7th',class_course:'Geometry',class_teacher:'Mikel',students:['Abigail Zakutanksy','Adrian Barrientos','Austin Cripe','Deklan Hawthorne','Guadalupe Jimenez Rodriguez','Jessa Sprague','Joseph Dunfee','Lillie Gerke','Logan Rasler','Natasha Cartwright','Ethan Stufflebeam','Wyatt Sayler']}
   ];
-  const TEACHER='Jesse Ritter';
-  let currentClassKey=CLASSES[0].key;
-  const $=s=>document.querySelector(s);
-  const el=(t,a={},c=[])=>{const n=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(k==='text')n.textContent=v;else n.setAttribute(k,v);}([]).concat(c).forEach(x=>n.append(x?.nodeType?x:document.createTextNode(x)));return n};
+  const TEACHER = 'Jesse Ritter';
+
+  // Expose to window for later helper scripts
+  window.CLASSES = CLASSES;
+  window.TEACHER = TEACHER;
+
+  // === HELPERS ===
+  let currentClassKey = CLASSES[0].key; // default first tab
+  window.currentClassKey = currentClassKey; // keep in sync for submit helpers
+
+  const $ = s => document.querySelector(s);
+  const el = (t,a={},c=[])=>{const n=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(k==='text')n.textContent=v;else n.setAttribute(k,v);}([]).concat(c).forEach(x=>n.append(x?.nodeType?x:document.createTextNode(x)));return n;};
   const todayStr=()=>new Date().toISOString().slice(0,10);
-  const storageKey=(d,k)=>`ISL::${d}::${k}`;
-  function initDate(){const d=$('#date');d.value=todayStr();d.addEventListener('change',renderAll);}  
-  function initTabs(){const tabs=$('#tabs');tabs.innerHTML='';CLASSES.forEach(c=>{const b=el('button',{class:'tab'+(c.key===currentClassKey?' active':''),onclick:()=>{currentClassKey=c.key;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderAll();}},`${c.class_period} — ${c.class_course} — ${c.class_teacher}`);tabs.appendChild(b);});}
-  function loadData(date,cls){const raw=localStorage.getItem(storageKey(date,cls.key));if(raw)return JSON.parse(raw);return cls.students.map(n=>({student:n,WI:false,RH:false,AH:false,AFH:false,O:false,Ab:false,other_note:''}));}
-  function saveData(date,cls,rows){localStorage.setItem(storageKey(date,cls.key),JSON.stringify(rows));}
-  function renderAll(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);$('#panelTitle').textContent=`Inclusion Support · ${cls.class_period} · ${cls.class_course}`;$('#panelSub').textContent=`Teacher: ${TEACHER} · Class Teacher: ${cls.class_teacher} · Date: ${date}`;renderSurvey(rows,cls,date);}
-  function renderSurvey(rows,cls,date){const host=$('#survey');host.innerHTML='';rows.forEach(r=>{const card=el('div',{class:'person'});card.append(el('h3',{text:r.student}));const options=el('div',{class:'options'});const makeOpt=(label,key)=>{const id=`${cls.key}-${r.student}-${key}`.replace(/\s+/g,'_');const input=document.createElement('input');input.type='checkbox';input.id=id;input.checked=r[key]===true;input.addEventListener('change',e=>{r[key]=e.target.checked;if(r[key]&&key!=='Ab')r.Ab=false;if(key==='Ab'&&r.Ab){r.WI=r.RH=r.AH=r.AFH=r.O=false;r.other_note='';}saveData(date,cls,rows);});const lbl=el('label',{class:'opt',for:id},[input,label]);return lbl;};options.append(makeOpt('Worked Independently','WI'),makeOpt('Refused Help','RH'),makeOpt('Accepted Help','AH'),makeOpt('Asked for Help','AFH'),makeOpt('Other','O'),makeOpt('Absent','Ab'));const note=el('input',{class:'note',type:'text',value:r.other_note||'',placeholder:'Other note (optional)'});note.addEventListener('input',e=>{r.other_note=e.target.value;if(r.other_note&&!r.O)r.O=true;if(!r.other_note)r.O=false;r.Ab=false;saveData(date,cls,rows);});card.append(options,note);host.append(card);});}
-  function downloadCSV(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);let csv="date,class_period,class_course,class_teacher,teacher,student,statuses,other_note\n";rows.forEach(r=>{let statuses=[];if(r.WI)statuses.push('Worked Independently');if(r.RH)statuses.push('Refused Help');if(r.AH)statuses.push('Accepted Help');if(r.AFH)statuses.push('Asked for Help');if(r.O)statuses.push('Other');if(r.Ab)statuses.push('Absent');csv+=`${date},${cls.class_period},${cls.class_course},${cls.class_teacher},${TEACHER},${r.student},${statuses.join('|')},${(r.other_note||'').replaceAll(',',';')}\n`;});const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.csv`;a.click();URL.revokeObjectURL(url);}
-  function downloadJSON(){const date=$('#date').value||todayStr();const cls=CLASSES.find(c=>c.key===currentClassKey);const rows=loadData(date,cls);const data={date,teacher:TEACHER,class_period:cls.class_period,class_course:cls.class_course,class_teacher:cls.class_teacher,students:rows};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${cls.key}-${date}.json`;a.click();URL.revokeObjectURL(url);}
+
+  function initDate(){const d=$('#date');d.value=todayStr();d.addEventListener('change',renderAll);}
+
+  function initTabs(){
+    const tabs=$('#tabs');tabs.innerHTML='';
+    CLASSES.forEach(c=>{
+      const b=el('button',{class:'tab'+(c.key===currentClassKey?' active':''),onclick:()=>{currentClassKey=c.key; window.currentClassKey=currentClassKey; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderAll();}},`Period ${c.class_period.replace(/\D/g,'')}: ${c.class_course}`);
+      tabs.appendChild(b);
+    });
+  }
+
+  function defaultRows(cls){
+    return cls.students.map(n=>({
+      student:n,
+      WI:false, RH:false, AH:false, AFH:false, O:false, Ab:false,
+      other_note:''
+    }));
+  }
+
+  function renderAll(){
+    const date=$('#date').value||todayStr();
+    const cls=CLASSES.find(c=>c.key===currentClassKey);
+    renderSurvey(defaultRows(cls),cls,date);
+  }
+
+  function renderSurvey(rows,cls,date){
+    const host=$('#survey');host.innerHTML='';
+    rows.forEach(r=>{
+      const card=el('div',{class:'person','data-student': r.student});
+      card.append(el('h3',{text:r.student}));
+      const options=el('div',{class:'options'});
+      const makeOpt=(label,key)=>{
+        const id=`${cls.key}-${r.student}-${key}`.replace(/\s+/g,'_');
+        const input=document.createElement('input');
+        input.type='checkbox'; input.id=id; input.dataset.key=key; input.checked=r[key]===true;
+        const lbl=el('label',{class:'opt',for:id},[input,label]);
+        return lbl;
+      };
+      options.append(
+        makeOpt('Worked Independently','WI'),
+        makeOpt('Refused Help','RH'),
+        makeOpt('Accepted Help','AH'),
+        makeOpt('Asked for Help','AFH'),
+        makeOpt('Other','O'),
+        makeOpt('Absent','Ab')
+      );
+      const note=el('input',{class:'note',type:'text',placeholder:'Other note (optional)','data-key':'other_note'});
+      card.append(options,note);host.append(card);
+    });
+  }
+
+  // --- Inline smoke tests (do not change UI) ---
+  (function runTests(){
+    try{
+      console.assert(Array.isArray(window.CLASSES) && window.CLASSES.length>=2, 'CLASSES should be exposed on window');
+      console.assert(typeof window.currentClassKey==='string' && window.currentClassKey.length>0, 'currentClassKey should be on window');
+    }catch(e){ console.warn('Inline tests skipped:', e); }
+  })();
+
   initDate();initTabs();renderAll();
   </script>
+
+  <!-- Submit + Toast helpers -->
   <script>
-/* ===== Drive Submit Config ===== */
-const WEB_APP_URL   = 'https://script.google.com/a/macros/wawasee.k12.in.us/s/AKfycbwQYRpXcK9T2CFTVfALjq_GygLN7oaSUsEvyHNVCP6s_ItDd7B6aKGdMPAahUSIDuQ/exec';
-const SHARED_SECRET = 'REPLACE_WITH_THE_SAME_SECRET_USED_IN_APPS_SCRIPT'; // must match CONFIG.SHARED_SECRET
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzcJBXkcVEk6WMErODNIlXQfn6GHqSIYIX30g5ui1yDyhbHM-S-JWtyvN3NEbYEwR4m/exec';
 
-// Reuse your existing CSV builder. If yours is named differently, swap it in.
-function getCsvString(){
-  // Build from your page state; this mirrors the headers the Agent expects.
-  const date = document.querySelector('#date')?.value || todayStr();
-  const cls  = CLASSES.find(c => c.key === currentClassKey);
-  const rows = loadData(date, cls); // your existing function that reads the grid
-
-  let csv = "date,class_period,class_course,class_teacher,teacher,student,statuses,other_note\n";
-  rows.forEach(r=>{
-    const statuses = [];
-    if (r.WI)  statuses.push('Worked Independently');
-    if (r.RH)  statuses.push('Refused Help');
-    if (r.AH)  statuses.push('Accepted Help');
-    if (r.AFH) statuses.push('Asked for Help');
-    if (r.O)   statuses.push('Other');
-    if (r.Ab)  statuses.push('Absent');
-    csv += `${date},${cls.class_period},${cls.class_course},${cls.class_teacher},${TEACHER},${r.student},${statuses.join('|')},${(r.other_note||'').replaceAll(',',';')}\n`;
-  });
-  return csv;
-}
-
-// Clear, consistent filename for each class/date (Agent-friendly)
-function buildFilename(){
-  const date = document.querySelector('#date')?.value || todayStr();
-  const cls  = CLASSES.find(c => c.key === currentClassKey);
-  return `Inclusion_${cls.key}-${date}.csv`.replace(/\s+/g,'_');
-}
-
-// ISO date used server-side to file into the correct week folder
-function nowIso(){ return new Date().toISOString(); }
-
-// Submit -> Drive (no CORS preflight: send as text/plain, no custom headers)
-async function submitCsvToDrive(){
-  const status = document.getElementById('submitStatus');
-  status.textContent = 'Submitting…';
-  try{
-    const csv = getCsvString();
-    if (!csv || !csv.trim()){ status.textContent = 'No data to submit.'; return; }
-
-    const payload = {
-      csv,
-      filename: buildFilename(),
-      isoDate: nowIso(),
-      secret: SHARED_SECRET
-    };
-
-    const res = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload) // (text/plain by default; avoids preflight)
-    });
-
-    const json = await res.json().catch(()=>({}));
-    if (!json.ok) throw new Error(json.error || `Upload failed`);
-
-    status.textContent = 'Saved to Drive ✔';
-    console.log('Drive file:', json.webViewLink, 'Folder:', `https://drive.google.com/drive/folders/${json.folderId}`);
-  }catch(err){
-    console.error(err);
-    status.textContent = 'Error saving — downloading locally instead.';
-    fallbackDownloadCsv(); // keep working even if Drive hiccups
+  function showToast(msg, type='success') {
+    const c = document.querySelector('.toast-container'); if (!c) return;
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 220); }, 2500);
   }
-}
 
-// Wire up the button
-document.getElementById('submitCsvBtn').addEventListener('click', submitCsvToDrive);
+  function collectRowsFromDOM(cls) {
+    return [...document.querySelectorAll('.person')].map(card => {
+      const student = card.getAttribute('data-student') || card.querySelector('h3')?.textContent || '';
+      const get = key => card.querySelector(`input[data-key="${key}"]`)?.checked || false;
+      const other = card.querySelector('input[data-key="other_note"]')?.value || '';
+      return { student, WI:get('WI'), RH:get('RH'), AH:get('AH'), AFH:get('AFH'), O:get('O'), Ab:get('Ab'), other_note: other };
+    });
+  }
 
-// Local fallback download (optional keep)
-function fallbackDownloadCsv(){
-  const csv = getCsvString();
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = buildFilename();
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-}
+  function getCsvString() {
+    const date = document.getElementById('date').value || new Date().toISOString().slice(0,10);
+    const classesSource = window.CLASSES || [];
+    const fallbackCls = (Array.isArray(classesSource) && classesSource.length>0) ? classesSource[0] : (typeof CLASSES!=='undefined'? CLASSES[0]: null);
+    const cls = (classesSource.find?.(c => c.key === window.currentClassKey)) || fallbackCls;
+    if(!cls){ throw new Error('Classes not initialized'); }
 
-// Helper if you don't already have it:
-function todayStr(){
-  const d = new Date();
-  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-}
-</script>
+    const rows = collectRowsFromDOM(cls);
+    let csv = "date,class_period,class_course,class_teacher,teacher,student,statuses,other_note\n";
+    rows.forEach(r => {
+      const statuses = [];
+      if (r.WI)  statuses.push('Worked Independently');
+      if (r.RH)  statuses.push('Refused Help');
+      if (r.AH)  statuses.push('Accepted Help');
+      if (r.AFH) statuses.push('Asked for Help');
+      if (r.O)   statuses.push('Other');
+      if (r.Ab)  statuses.push('Absent');
+      const note = (r.other_note || '').replaceAll(',', ';');
+      csv += `${date},${cls.class_period},${cls.class_course},${cls.class_teacher},${(window.TEACHER||'Jesse Ritter')},${r.student},${statuses.join('|')},${note}\n`;
+    });
+    return csv;
+  }
+
+  function buildFilename() {
+    const date = document.getElementById('date').value || new Date().toISOString().slice(0,10);
+    const classesSource = window.CLASSES || [];
+    const fallbackCls = (Array.isArray(classesSource) && classesSource.length>0) ? classesSource[0] : (typeof CLASSES!=='undefined'? CLASSES[0]: null);
+    const cls = (classesSource.find?.(c => c.key === window.currentClassKey)) || fallbackCls;
+    const key = cls ? cls.key : 'Unknown';
+    return `Inclusion_${key}-${date}.csv`.replace(/\s+/g,'_');
+  }
+
+  async function submitCsvToDrive() {
+    const btn = document.getElementById('submitCsvBtn');
+    const status = document.getElementById('submitStatus');
+    if (!btn) return;
+
+    const original = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Submitting…'; status.textContent = 'Submitting…';
+
+    try {
+      const csv = getCsvString();
+      const payload = { csv, filename: buildFilename(), isoDate: new Date().toISOString() };
+      const res = await fetch(WEB_APP_URL, { method:'POST', body: JSON.stringify(payload) });
+      const json = await res.json().catch(() => ({}));
+      if (!json.ok) throw new Error(json.error || 'Upload failed');
+
+      status.textContent = 'Saved to Drive ✔';
+      showToast('Saved to Drive', 'success');
+    } catch (err) {
+      console.error(err);
+      status.textContent = 'Upload failed — downloaded CSV instead';
+      showToast('Upload failed — downloaded CSV', 'error');
+
+      // Fallback: download locally
+      const blob = new Blob([getCsvString()], { type:'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = buildFilename();
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    } finally {
+      btn.disabled = false; btn.textContent = original;
+    }
+  }
+
+  // Wire the click (after DOM is ready)
+  document.getElementById('submitCsvBtn')?.addEventListener('click', submitCsvToDrive);
+
+  // --- Minimal runtime tests for the submit helpers ---
+  (function submitTests(){
+    try{
+      console.assert(Array.isArray(window.CLASSES) && window.CLASSES.length>0, 'window.CLASSES exists');
+      const fn = buildFilename();
+      console.assert(typeof fn==='string' && fn.includes('Inclusion_'), 'buildFilename returns a string');
+    }catch(e){ console.warn('Submit helper tests skipped:', e); }
+  })();
+  </script>
 </body>
 </html>
